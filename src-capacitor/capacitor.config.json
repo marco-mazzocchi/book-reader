@@ -1,0 +1,7 @@
+{
+  "appId": "com.marcomazzocchi.bookreader",
+  "appName": "Book Reader",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www"
+}
