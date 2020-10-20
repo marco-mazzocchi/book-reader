@@ -123,7 +123,7 @@ export default {
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 10;
+  z-index: 3001;
   transition: all .2s ease-in-out;
   &.full-screen {
     height: calc(100% - 50px);

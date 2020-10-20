@@ -1,6 +1,7 @@
 const routes = [
   {
     path: '/',
+    alias: '/books',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/BookList.vue') }]
   },
@@ -13,6 +14,11 @@ const routes = [
     path: '/downloads',
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '/', component: () => import('pages/Downloads.vue') }]
+  },
+  {
+    path: '/credits',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '/', component: () => import('pages/Credits.vue') }]
   },
   // Always leave this as last one,
   // but you can also remove it

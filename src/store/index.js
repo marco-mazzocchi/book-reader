@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import app from './app'
 import player from './player'
 import books from './books'
 
@@ -18,6 +19,7 @@ Vue.use(Vuex)
 export default function () {
   const Store = new Vuex.Store({
     modules: {
+      app,
       player,
       books
     },

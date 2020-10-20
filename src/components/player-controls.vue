@@ -1,6 +1,6 @@
 <template>
   <div class="controls row justify-between">
-    <q-btn flat round color="primary" icon="volume_down" />
+    <q-btn @click="toggleDrawer" flat round color="primary" icon="menu" />
     <div class="audio-controls">
       <q-btn flat round color="primary" icon="skip_previous" />
       <q-btn @click="togglePlaying" flat round color="primary" :icon="playIcon" />
@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+
 export default {
   name: 'PlayerControls',
   props: {
@@ -18,6 +20,7 @@ export default {
     isPlaying: Boolean
   },
   methods: {
+    ...mapMutations({ toggleDrawer: 'app/toggleDrawer' }),
     togglePlaying () {
       this.$emit('togglePlaying')
     },

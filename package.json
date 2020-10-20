@@ -1,6 +1,6 @@
 {
   "name": "book-reader",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Listen to audiobook",
   "productName": "Book Reader",
   "author": "Marco Mazzocchi <marco.mazzocchi.pc@gmail.com>",
@@ -19,6 +19,7 @@
     "@capacitor/core": "^2.4.2",
     "@quasar/extras": "^1.0.0",
     "core-js": "^3.6.5",
+    "firebase": "^7.23.0",
     "quasar": "^1.0.0"
   },
   "devDependencies": {
