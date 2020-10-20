@@ -34,3 +34,4 @@ yarn-error.log*
 
 public/audio/*
 src/boot/firebaseConfig.js
+my-release-key.keystore
