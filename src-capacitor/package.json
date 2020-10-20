@@ -1,6 +1,6 @@
 {
   "name": "book-reader",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Listen to audiobook",
   "author": "Marco Mazzocchi <marco.mazzocchi.pc@gmail.com>",
   "private": true,
