@@ -1,7 +1,7 @@
 export default function () {
   return {
     books: {
-      1: {
+      /* 1: {
         title: 'Il Conformista',
         author: 'Alberto Moravia',
         cover: 'images/annie-spratt-OKDSByxXA6I-unsplash.jpg',
@@ -75,9 +75,8 @@ export default function () {
             duration: '31:07'
           }
         }
-      }
+      } */
     },
-    files: [],
     downloads: []
   }
 }

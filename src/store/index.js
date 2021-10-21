@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import app from './app'
 import player from './player'
 import books from './books'
+import files from './files'
 
 Vue.use(Vuex)
 
@@ -21,7 +22,8 @@ export default function () {
     modules: {
       app,
       player,
-      books
+      books,
+      files
     },
 
     // enable strict mode (adds overhead!)

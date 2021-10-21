@@ -6,6 +6,6 @@ export function addDownload (state, payload) {
   state.downloads.push(payload)
 }
 
-export function setFiles (state, payload) {
-  state.files = payload
+export function setBooks (state, payload) {
+  state.books = payload
 }

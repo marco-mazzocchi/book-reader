@@ -1,9 +1,23 @@
-import { firebaseStorage } from 'boot/firebase'
-import { Plugins, FilesystemDirectory } from '@capacitor/core'
+/* eslint no-unused-vars: 'off' */
 
-const { Filesystem } = Plugins
+import { firebaseStorage, firebaseDb } from 'boot/firebase'
+
+export function fetchBookList (context) {
+  firebaseDb.collection('books').orderBy('title').get().then((querySnapshot) => {
+    const books = []
+    querySnapshot.forEach((doc) => {
+      books.push(doc.data())
+    })
+    context.commit('setBooks', books)
+  })
+    .catch((error) => {
+      console.log('Error getting documents: ', error)
+    })
+}
 
 export function getDownloadList (context) {
+  // TODO remove this line
+  if (context.state.downloads.length > 0) return false
   const ref = firebaseStorage.ref()
 
   ref
@@ -12,6 +26,7 @@ export function getDownloadList (context) {
       res.items.forEach(item => {
         item.getDownloadURL().then(url => {
           const file = {
+            item: item,
             path: item.location.path_,
             url: url
           }
@@ -20,19 +35,6 @@ export function getDownloadList (context) {
       })
     })
     .catch(function (error) {
-      console.error(error)
-    })
-}
-
-export function getFileList (context) {
-  const dir = FilesystemDirectory.Documents
-  Filesystem.readdir(dir)
-    .then(ReaddirResult => {
-      console.log(ReaddirResult)
-      context.commit('setFiles', ReaddirResult)
-    })
-    .catch(error => {
-      // TODO share errors to app level
       console.error(error)
     })
 }

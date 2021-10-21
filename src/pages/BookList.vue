@@ -1,7 +1,12 @@
 <template>
   <q-page padding>
     <q-list padding>
-      <q-item clickable :to="'book/' + id" v-for="id in Object.keys(books)" :key="id">
+      <q-item
+        clickable
+        :to="'book/' + id"
+        v-for="id in Object.keys(books)"
+        :key="id"
+      >
         <q-item-section avatar>
           <q-avatar rounded>
             <img :src="books[id].cover">
@@ -10,11 +15,19 @@
 
         <q-item-section>
           <q-item-label>{{ books[id].title }}</q-item-label>
-          <q-item-label caption lines="2">{{ books[id].author }}, {{ books[id].duration }} ore</q-item-label>
+          <q-item-label
+            caption
+            lines="2"
+          >{{ books[id].author }}, {{ books[id].duration }} ore</q-item-label>
         </q-item-section>
 
         <q-item-section side>
-          <q-btn round color="primary" flat icon="play_arrow" />
+          <q-btn
+            round
+            color="primary"
+            flat
+            icon="play_arrow"
+          />
         </q-item-section>
       </q-item>
     </q-list>
@@ -24,12 +37,18 @@
 <script>
 import { createNamespacedHelpers } from 'vuex'
 
-const { mapState } = createNamespacedHelpers('books')
+const { mapState, mapActions } = createNamespacedHelpers('books')
 
 export default {
   name: 'BookList',
   computed: {
     ...mapState(['books'])
+  },
+  mounted () {
+    this.fetchBookList()
+  },
+  methods: {
+    ...mapActions(['fetchBookList'])
   }
 }
 </script>
