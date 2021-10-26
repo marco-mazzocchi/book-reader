@@ -10,61 +10,71 @@
     }"
     v-if="audioIsReady"
   >
-      <div class="text-center column full-height">
+    <div class="text-center column full-height">
 
-        <div v-show="fullScreen" class="col-6">
-          <div class="cover full-height">
-            <img
-              src="images/annie-spratt-OKDSByxXA6I-unsplash.jpg"
-              class="shadow-10 full-height"
-            />
-            <q-spinner-audio
-              v-show="isPlaying"
-              color="white"
-              size="100px"
-              class="spinner-audio"
-            />
-          </div>
+      <div
+        v-show="fullScreen"
+        class="col-6"
+      >
+        <div class="cover full-height">
+          <img
+            :src="book.cover"
+            class="shadow-10 full-height"
+          />
+          <q-spinner-audio
+            v-show="isPlaying"
+            color="white"
+            size="100px"
+            class="spinner-audio"
+          />
         </div>
+      </div>
 
-        <div v-show="fullScreen" class="col column justify-center">
-          <div class="boook-header">
-            <div class="book-title">Il conformista</div>
-            <div class="book-author">Alberto Moravia</div>
-          </div>
+      <div
+        v-show="fullScreen"
+        class="col column justify-center"
+      >
+        <div class="boook-header">
+          <div class="book-title">{{ book.title }}</div>
+          <div class="book-author">{{ book.author }}</div>
+          <div class="track-title">Traccia {{ trackId }}</div>
         </div>
+      </div>
 
-        <div v-show="fullScreen" class="col column justify-center">
-          <div class="slider">
-            <q-slider
-              :value="currentTime"
-              @change="handleTimeChange"
-              :min="0"
-              :max="duration"
-              :step="1"
-              color="accent"
-            />
-            <div class="flex justify-between">
-              <div>
-                {{currentTimeInMinutes}}
-              </div>
-              <div>
-                {{durationInMinutes}}
-              </div>
+      <div
+        v-show="fullScreen"
+        class="col column justify-center"
+      >
+        <div class="slider">
+          <q-slider
+            :value="currentTime"
+            @change="handleTimeChange"
+            :min="0"
+            :max="duration"
+            :step="1"
+            color="accent"
+          />
+          <div class="flex justify-between">
+            <div>
+              {{currentTimeInMinutes}}
+            </div>
+            <div>
+              {{durationInMinutes}}
             </div>
           </div>
         </div>
-
-        <div class="col column justify-end">
-          <player-controls
-            :fullScreen="fullScreen"
-            :isPlaying="isPlaying"
-            @toggleFullScreen="toggleFullScreen"
-            @togglePlaying="togglePlay"
-          />
-        </div>
-
       </div>
+
+      <div class="col column justify-end">
+        <player-controls
+          :fullScreen="fullScreen"
+          :isPlaying="isPlaying"
+          @toggleFullScreen="toggleFullScreen"
+          @togglePlaying="togglePlay"
+        />
+      </div>
+
+    </div>
 
   </div>
 </template>
@@ -75,6 +85,7 @@ import { digitalClockFormat } from '../utils/time'
 import PlayerControls from './player-controls'
 
 const { mapState, mapMutations, mapActions } = createNamespacedHelpers('player')
+const { mapGetters: mapBookGetters } = createNamespacedHelpers('books')
 
 export default {
   name: 'Player',
@@ -95,7 +106,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(['isPlaying', 'audioIsReady', 'activeAudio', 'currentTime']),
+    ...mapState(['isPlaying', 'audioIsReady', 'activeAudio', 'currentTime', 'bookId', 'trackId']),
+    ...mapBookGetters(['getBook']),
     duration () {
       return this.activeAudio.duration
     },
@@ -110,6 +122,9 @@ export default {
     },
     currentTimeInMinutes () {
       return digitalClockFormat(this.currentTimeInSeconds)
+    },
+    book () {
+      return this.getBook(this.bookId)
     }
   }
 }
@@ -124,7 +139,7 @@ export default {
   bottom: 0;
   right: 0;
   z-index: 3001;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   &.full-screen {
     height: calc(100% - 50px);
   }
@@ -141,7 +156,7 @@ export default {
       left: 50%;
       margin-top: -50px;
       margin-left: -50px;
-      opacity: .2;
+      opacity: 0.2;
     }
   }
   .book-title {
@@ -150,6 +165,9 @@ export default {
   .book-author {
     color: $grey-6;
     font-weight: 500;
+  }
+  .track-title {
+    margin-top: 0.3rem;
   }
 }
 </style>
