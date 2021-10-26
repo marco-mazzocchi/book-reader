@@ -17,3 +17,11 @@ export function setAudioIsReady (state, value) {
 export function setCurrentTime (state, value) {
   state.currentTime = value
 }
+
+export function setBookId (state, value) {
+  state.bookId = value
+}
+
+export function setTrackId (state, value) {
+  state.trackId = value
+}

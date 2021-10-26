@@ -18,7 +18,7 @@
           <q-item-label
             caption
             lines="2"
-          >{{ books[id].author }}, {{ books[id].duration }} ore</q-item-label>
+          >{{ books[id].author }}, {{ bookDuration(id) }} ore</q-item-label>
         </q-item-section>
 
         <q-item-section side>
@@ -27,6 +27,7 @@
             color="primary"
             flat
             icon="play_arrow"
+            @click.prevent="playBook({id})"
           />
         </q-item-section>
       </q-item>
@@ -36,8 +37,10 @@
 
 <script>
 import { createNamespacedHelpers } from 'vuex'
+import { digitalClockToSeconds, digitalClockFormat } from '../utils/time'
 
 const { mapState, mapActions } = createNamespacedHelpers('books')
+const { mapActions: mapPlayerActions } = createNamespacedHelpers('player')
 
 export default {
   name: 'BookList',
@@ -48,7 +51,19 @@ export default {
     this.fetchBookList()
   },
   methods: {
-    ...mapActions(['fetchBookList'])
+    ...mapActions(['fetchBookList']),
+    ...mapPlayerActions(['playBook']),
+    bookDuration (bookId) {
+      // duration in seconds
+      let duration = 0
+      const { tracks } = this.books[bookId]
+      if (!tracks) return '00:00'
+      for (const trackId in this.books[bookId].tracks) {
+        const track = tracks[trackId]
+        duration += digitalClockToSeconds(track.duration)
+      }
+      return digitalClockFormat(duration)
+    }
   }
 }
 </script>

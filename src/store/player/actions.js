@@ -9,6 +9,7 @@ function store (key, value) {
 }
 
 export function setTrack (context, payload) {
+  // TODO: get track from book store
   const { src, autoplay } = payload
   if (!src) throw new Error('src is not defined')
 
@@ -52,6 +53,8 @@ export function setTrack (context, payload) {
 
   context.commit('setActiveAudio', activeAudio)
 
+  context.commit('setTrackId', activeAudio)
+
   activeAudio.addEventListener('canplay', handleCanPlay)
 
   activeAudio.addEventListener('timeupdate', handleTimeUpdate)
@@ -82,4 +85,17 @@ export function togglePlay (context) {
 export function setCurrentTime (context, payload) {
   context.state.activeAudio.currentTime = payload
   context.commit('setCurrentTime', payload)
+}
+
+export function playBook (context, payload) {
+  const book = context.rootGetters['books/getBook'](payload.id)
+  const { tracks } = book
+  // TODO: manage error?
+  if (!tracks) return false
+
+  const firstTrack = tracks['1']
+  context.dispatch('setTrack', {
+    src: firstTrack.src,
+    autoplay: true
+  })
 }

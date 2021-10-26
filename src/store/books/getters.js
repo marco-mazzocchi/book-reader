@@ -1,3 +1,3 @@
-// export function downloads (state) {
-//   return state.downloads
-// }
+export function getBook (state) {
+  return (id) => state.books[id]
+}

@@ -18,3 +18,8 @@ export function leadingZero (number, spaces = 2) {
   }
   return str
 }
+
+export function digitalClockToSeconds (value) {
+  const [minutes, seconds] = value.split(':')
+  return parseInt(minutes) * 60 + parseInt(seconds)
+}

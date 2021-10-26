@@ -5,7 +5,7 @@ export default function () {
     isPlaying: false,
     currentTime: 0,
     fullScreen: false,
-    book: '',
-    track: ''
+    bookId: '',
+    trackId: ''
   }
 }
