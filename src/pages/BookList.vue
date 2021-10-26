@@ -47,9 +47,6 @@ export default {
   computed: {
     ...mapState(['books'])
   },
-  mounted () {
-    this.fetchBookList()
-  },
   methods: {
     ...mapActions(['fetchBookList']),
     ...mapPlayerActions(['playBook']),

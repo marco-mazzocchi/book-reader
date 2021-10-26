@@ -9,59 +9,62 @@ function store (key, value) {
 }
 
 export function setTrack (context, payload) {
-  // TODO: get track from book store
-  const { src, autoplay } = payload
-  if (!src) throw new Error('src is not defined')
+  return new Promise((resolve) => {
+    const { bookId, trackId, autoplay } = payload
+    const track = context.rootGetters['books/getTrack'](bookId, trackId)
+    const { src } = track
+    if (!src) throw new Error('src is not defined')
 
-  function handleCanPlay () {
-    context.commit('setAudioIsReady', true)
-    if (autoplay) context.dispatch('play')
-  }
+    function handleCanPlay () {
+      context.commit('setAudioIsReady', true)
+      if (autoplay) context.dispatch('play')
+    }
 
-  function handleTimeUpdate () {
-    context.commit('setCurrentTime', activeAudio.currentTime)
-  }
+    function handleTimeUpdate () {
+      context.commit('setCurrentTime', activeAudio.currentTime)
+    }
 
-  function handleAudioEnded () {
-    context.commit('setPlaying', false)
-    context.commit('setCurrentTime', 0)
-  }
+    function handleAudioEnded () {
+      context.commit('setPlaying', false)
+      context.commit('setCurrentTime', 0)
+    }
 
-  const throttleTimeUpdate = throttle(() => {
-    store('player/currentTime', Math.round(activeAudio.currentTime))
-  }, 3000)
+    const throttleTimeUpdate = throttle(() => {
+      store('player/currentTime', Math.round(activeAudio.currentTime))
+    }, 3000)
 
-  if (context.state.isPlaying) context.dispatch('pause')
-  if (context.state.activeAudio) {
-    context.commit('setAudioIsReady', false)
-    // remove old event listener
-    context.state.activeAudio.removeEventListener('canplay', handleCanPlay)
-    context.state.activeAudio.removeEventListener(
-      'timeupdate',
-      handleTimeUpdate
-    )
-    context.state.activeAudio.removeEventListener(
-      'timeupdate',
-      throttleTimeUpdate
-    )
-    context.state.activeAudio.removeEventListener('ended', handleAudioEnded)
-  }
+    if (context.state.isPlaying) context.dispatch('pause')
 
-  const activeAudio = new Audio(src)
+    // if activeAudio already exist reset listeners
+    if (context.state.activeAudio) {
+      context.commit('setAudioIsReady', false)
+      // remove old event listener
+      context.state.activeAudio.removeEventListener('canplay', handleCanPlay)
+      context.state.activeAudio.removeEventListener(
+        'timeupdate',
+        handleTimeUpdate
+      )
+      context.state.activeAudio.removeEventListener(
+        'timeupdate',
+        throttleTimeUpdate
+      )
+      context.state.activeAudio.removeEventListener('ended', handleAudioEnded)
+    }
 
-  store('player/src', src)
+    const activeAudio = new Audio(src)
 
-  context.commit('setActiveAudio', activeAudio)
+    context.commit('setActiveAudio', activeAudio)
 
-  context.commit('setTrackId', activeAudio)
+    context.dispatch('setBookId', bookId)
+    context.dispatch('setTrackId', trackId)
 
-  activeAudio.addEventListener('canplay', handleCanPlay)
+    activeAudio.addEventListener('canplay', handleCanPlay)
+    activeAudio.addEventListener('timeupdate', handleTimeUpdate)
+    activeAudio.addEventListener('timeupdate', throttleTimeUpdate)
+    activeAudio.addEventListener('ended', handleAudioEnded)
 
-  activeAudio.addEventListener('timeupdate', handleTimeUpdate)
-
-  activeAudio.addEventListener('timeupdate', throttleTimeUpdate)
-
-  activeAudio.addEventListener('ended', handleAudioEnded)
+    resolve(activeAudio)
+  })
 }
 
 export function play (context) {
@@ -82,20 +85,41 @@ export function togglePlay (context) {
   }
 }
 
-export function setCurrentTime (context, payload) {
-  context.state.activeAudio.currentTime = payload
-  context.commit('setCurrentTime', payload)
+export function setCurrentTime (context, value) {
+  context.state.activeAudio.currentTime = value
+  context.commit('setCurrentTime', value)
 }
 
 export function playBook (context, payload) {
-  const book = context.rootGetters['books/getBook'](payload.id)
-  const { tracks } = book
-  // TODO: manage error?
-  if (!tracks) return false
-
-  const firstTrack = tracks['1']
   context.dispatch('setTrack', {
-    src: firstTrack.src,
+    bookId: payload.id,
+    trackId: '1',
     autoplay: true
   })
+}
+
+export function setBookId (context, bookId) {
+  store('player/bookId', bookId)
+  context.commit('setBookId', bookId)
+}
+
+export function setTrackId (context, track) {
+  store('player/trackId', track)
+  context.commit('setTrackId', track)
+}
+
+export function restoreLastSession (context) {
+  const bookId = LocalStorage.getItem('player/bookId')
+  const trackId = LocalStorage.getItem('player/trackId')
+  const audioCurrentTime = LocalStorage.getItem('player/currentTime')
+  if (bookId && trackId) {
+    context.dispatch('setTrack', {
+      bookId,
+      trackId
+    }).then(() => {
+      if (audioCurrentTime) {
+        context.dispatch('setCurrentTime', audioCurrentTime)
+      }
+    })
+  }
 }

@@ -3,13 +3,14 @@
 import { firebaseStorage, firebaseDb } from 'boot/firebase'
 
 export function fetchBookList (context) {
-  firebaseDb.collection('books').orderBy('title').get().then((querySnapshot) => {
-    const books = []
-    querySnapshot.forEach((doc) => {
-      books.push(doc.data())
+  return firebaseDb.collection('books').orderBy('title').get()
+    .then((querySnapshot) => {
+      const books = []
+      querySnapshot.forEach((doc) => {
+        books.push(doc.data())
+      })
+      context.commit('setBooks', books)
     })
-    context.commit('setBooks', books)
-  })
     .catch((error) => {
       console.log('Error getting documents: ', error)
     })

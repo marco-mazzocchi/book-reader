@@ -1,19 +1,32 @@
 <template>
   <q-page padding>
     <h4 class="text-center">Downloads</h4>
-    <q-banner v-if="error" class="text-white bg-red">
+    <q-banner
+      v-if="error"
+      class="text-white bg-red"
+    >
       {{ error }}
     </q-banner>
 
     <h6 class="text-center">Local ({{ files.length }})</h6>
 
     <div v-if="files.length > 0">
-      <q-btn color="red" rounded class="q-my-md">Elimina tutti</q-btn>
+      <q-btn
+        color="red"
+        rounded
+        class="q-my-md"
+      >Elimina tutti</q-btn>
       <q-list>
-        <q-item v-for="file in files" :key="file">
+        <q-item
+          v-for="file in files"
+          :key="file"
+        >
           <q-item-section>{{ file }}</q-item-section>
           <q-item-section side>
-            <q-icon color="primary" name="delete" />
+            <q-icon
+              color="primary"
+              name="delete"
+            />
           </q-item-section>
         </q-item>
       </q-list>
@@ -23,7 +36,10 @@
 
     <div v-if="downloads.length > 0">
       <q-list>
-        <q-item v-for="file in downloads" :key="file.path">
+        <q-item
+          v-for="file in downloads"
+          :key="file.path"
+        >
           <q-item-section>{{ file.path }}</q-item-section>
           <q-item-section side>
             <q-icon
@@ -70,8 +86,7 @@ export default {
       directory: FilesystemDirectory.Data
     }).then(result => {
       const src = Capacitor.convertFileSrc(result.uri)
-
-      this.setTrack({ src: src, autoplay: true })
+      console.log('src', src)
     })
   }
 }

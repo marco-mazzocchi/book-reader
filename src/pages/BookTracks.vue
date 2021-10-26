@@ -4,21 +4,37 @@
       :src="book.cover"
       style="height: 140px; border-radius: 20px"
     >
-    <div class="absolute-full flex flex-center">
-      <div>
-        <h5 class="text-center q-my-sm">{{ book.title }}</h5>
-        <h6 class="text-center q-my-sm">{{ book.author }}</h6>
+      <div class="absolute-full flex flex-center">
+        <div>
+          <h5 class="text-center q-my-sm">{{ book.title }}</h5>
+          <h6 class="text-center q-my-sm">{{ book.author }}</h6>
+        </div>
       </div>
-    </div>
     </q-img>
-    <q-list padding separator>
-      <q-item clickable v-for="id in Object.keys(book.tracks)" :key="id" @click="setTrackAndPlay(book.tracks[id])">
+    <q-list
+      padding
+      separator
+    >
+      <q-item
+        clickable
+        v-for="id in Object.keys(book.tracks)"
+        :key="id"
+        @click="setTrackAndPlay(id)"
+      >
         <q-item-section>
           <q-item-label>Traccia {{id}}</q-item-label>
-          <q-item-label caption lines="2">{{book.tracks[id].duration}} minuti</q-item-label>
+          <q-item-label
+            caption
+            lines="2"
+          >{{book.tracks[id].duration}} minuti</q-item-label>
         </q-item-section>
         <q-item-section side>
-          <q-btn round color="primary" flat icon="play_arrow" />
+          <q-btn
+            round
+            color="primary"
+            flat
+            icon="play_arrow"
+          />
         </q-item-section>
       </q-item>
     </q-list>
@@ -36,15 +52,19 @@ export default {
   computed: {
     ...mapState(['books']),
     book () {
+      return this.books[this.bookId]
+    },
+    bookId () {
       const { id } = this.$route.params
-      return this.books[id]
+      return id
     }
   },
   methods: {
     ...mapActions(['setTrack']),
-    setTrackAndPlay (track) {
+    setTrackAndPlay (trackId) {
       this.setTrack({
-        src: track.src,
+        bookId: this.bookId,
+        trackId: trackId,
         autoplay: true
       })
     }

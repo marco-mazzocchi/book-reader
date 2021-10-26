@@ -4,21 +4,20 @@
   </div>
 </template>
 <script>
+import { createNamespacedHelpers } from 'vuex'
+const { mapActions: mapBookActions } = createNamespacedHelpers('books')
+const { mapActions: mapPlayerActions } = createNamespacedHelpers('player')
+
 export default {
   name: 'App',
   mounted () {
-    const audioSrc = this.$q.localStorage.getItem('player/src')
-    const audioCurrentTime = this.$q.localStorage.getItem('player/currentTime')
-
-    if (audioSrc) {
-      this.$store.dispatch('player/setTrack', {
-        src: audioSrc
-      })
-    }
-
-    if (audioCurrentTime) {
-      this.$store.dispatch('player/setCurrentTime', audioCurrentTime)
-    }
+    this.fetchBookList().then(() => {
+      this.restoreLastSession()
+    })
+  },
+  methods: {
+    ...mapBookActions(['fetchBookList']),
+    ...mapPlayerActions(['restoreLastSession'])
   }
 }
 </script>
