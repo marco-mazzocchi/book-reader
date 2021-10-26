@@ -115,13 +115,13 @@ export default {
       return Math.round(this.activeAudio.duration)
     },
     durationInMinutes () {
-      return digitalClockFormat(this.durationInSeconds)
+      return digitalClockFormat(this.durationInSeconds, { showHours: false })
     },
     currentTimeInSeconds () {
       return Math.round(this.currentTime)
     },
     currentTimeInMinutes () {
-      return digitalClockFormat(this.currentTimeInSeconds)
+      return digitalClockFormat(this.currentTimeInSeconds, { showHours: false })
     },
     book () {
       return this.getBook(this.bookId)

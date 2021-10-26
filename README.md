@@ -45,7 +45,7 @@ jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.
 Change target file version each time (also in `package.json`)
 
 ```bash
-~/Library/Android/sdk/build-tools/29.0.2/zipalign -v 4 dist/capacitor/android/apk/release/app-release-unsigned.apk bookReader_0.2.1.apk
+~/Library/Android/sdk/build-tools/29.0.2/zipalign -v 4 dist/capacitor/android/apk/release/app-release-unsigned.apk bookReader_[version].apk
 ```
 
 Move generated file to `dist/apk`

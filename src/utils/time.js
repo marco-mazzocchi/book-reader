@@ -1,11 +1,38 @@
-export function digitalClockFormat (timeInSeconds, separator = ':') {
+export function digitalClockFormat (seconds, options = {}) {
+  const { separator, showSeconds, showMinutes, showHours } = {
+    separator: ':',
+    showSeconds: true,
+    showMinutes: true,
+    showHours: true,
+    ...options
+  }
   const secondsInsideAMinute = 60
-  const minutes =
-    timeInSeconds < secondsInsideAMinute
+  const minutesInsideAnHour = 60
+  let minutes =
+    seconds < secondsInsideAMinute
       ? 0
-      : Math.floor(timeInSeconds / secondsInsideAMinute)
-  const seconds = timeInSeconds - minutes * secondsInsideAMinute
-  return `${leadingZero(minutes)}${separator}${leadingZero(seconds)}`
+      : Math.floor(seconds / secondsInsideAMinute)
+  const hours = minutes < minutesInsideAnHour
+    ? 0
+    : Math.floor(minutes / minutesInsideAnHour)
+
+  if (showHours && hours > 0) {
+    minutes = minutes - hours * minutesInsideAnHour
+    seconds = seconds - hours * minutesInsideAnHour * secondsInsideAMinute
+  }
+
+  if (showMinutes) {
+    seconds = seconds - minutes * secondsInsideAMinute
+  }
+
+  const result = []
+  const addTime = (time) => {
+    result.push(leadingZero(time))
+  }
+  if (showHours) addTime(hours)
+  if (showMinutes) addTime(minutes)
+  if (showSeconds) addTime(seconds)
+  return result.join(separator)
 }
 
 export function leadingZero (number, spaces = 2) {

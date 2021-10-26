@@ -59,7 +59,7 @@ export default {
         const track = tracks[trackId]
         duration += digitalClockToSeconds(track.duration)
       }
-      return digitalClockFormat(duration)
+      return digitalClockFormat(duration, { showSeconds: false })
     }
   }
 }
