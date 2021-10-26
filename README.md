@@ -20,12 +20,6 @@ quasar dev -m capacitor -T android
 npm run lint
 ```
 
-### Build the app for production
-
-```bash
-quasar build
-```
-
 ### Customize the configuration
 
 See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
@@ -48,8 +42,10 @@ quasar build -m capacitor -T android
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore dist/capacitor/android/apk/release/app-release-unsigned.apk alias_name
 ```
 
-Change target file version each time
+Change target file version each time (also in `package.json`)
 
 ```bash
 ~/Library/Android/sdk/build-tools/29.0.2/zipalign -v 4 dist/capacitor/android/apk/release/app-release-unsigned.apk bookReader_0.2.1.apk
 ```
+
+Move generated file to `dist/apk`
