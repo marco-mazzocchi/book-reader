@@ -23,6 +23,18 @@
 
         <q-item-section side>
           <q-btn
+            v-show="isBookPlaying(id)"
+            round
+            color="primary"
+            flat
+          >
+            <q-spinner-audio
+              color="primary"
+              size="1em"
+            />
+          </q-btn>
+          <q-btn
+            v-show="!isBookPlaying(id)"
             round
             color="primary"
             flat
@@ -40,12 +52,16 @@ import { createNamespacedHelpers } from 'vuex'
 import { digitalClockToSeconds, digitalClockFormat } from '../utils/time'
 
 const { mapState, mapActions } = createNamespacedHelpers('books')
-const { mapActions: mapPlayerActions } = createNamespacedHelpers('player')
+const { mapActions: mapPlayerActions, mapState: mapPlayerState } = createNamespacedHelpers('player')
 
 export default {
   name: 'BookList',
   computed: {
-    ...mapState(['books'])
+    ...mapState(['books']),
+    ...mapPlayerState({
+      isPlaying: 'isPlaying',
+      playingBookId: 'bookId'
+    })
   },
   methods: {
     ...mapActions(['fetchBookList']),
@@ -60,6 +76,9 @@ export default {
         duration += digitalClockToSeconds(track.duration)
       }
       return digitalClockFormat(duration, { showSeconds: false })
+    },
+    isBookPlaying (bookId) {
+      return this.isPlaying && bookId === this.playingBookId
     }
   }
 }

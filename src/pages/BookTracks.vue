@@ -30,6 +30,18 @@
         </q-item-section>
         <q-item-section side>
           <q-btn
+            v-show="isTrackPlaying(id)"
+            round
+            color="primary"
+            flat
+          >
+            <q-spinner-audio
+              color="primary"
+              size="1em"
+            />
+          </q-btn>
+          <q-btn
+            v-show="!isTrackPlaying(id)"
             round
             color="primary"
             flat
@@ -45,12 +57,17 @@
 import { createNamespacedHelpers } from 'vuex'
 
 const { mapState } = createNamespacedHelpers('books')
-const { mapActions } = createNamespacedHelpers('player')
+const { mapActions, mapState: mapPlayerState } = createNamespacedHelpers('player')
 
 export default {
   name: 'BookTracks',
   computed: {
     ...mapState(['books']),
+    ...mapPlayerState({
+      playingBookId: 'bookId',
+      playingTrakId: 'trackId',
+      isPlaying: 'isPlaying'
+    }),
     book () {
       return this.books[this.bookId]
     },
@@ -67,6 +84,9 @@ export default {
         trackId: trackId,
         autoplay: true
       })
+    },
+    isTrackPlaying (trackId) {
+      return this.isPlaying && this.bookId === this.playingBookId && trackId === this.playingTrakId
     }
   }
 }
