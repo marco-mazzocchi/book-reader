@@ -123,3 +123,23 @@ export function restoreLastSession (context) {
     })
   }
 }
+
+export function playPreviousTrack (context) {
+  const { bookId, trackId } = context.state
+  const previousTrackId = parseInt(trackId) - 1 + ''
+  context.dispatch('setTrack', {
+    bookId,
+    trackId: previousTrackId,
+    autoplay: true
+  })
+}
+
+export function playNextTrack (context) {
+  const { bookId, trackId } = context.state
+  const previousTrackId = parseInt(trackId) + 1 + ''
+  context.dispatch('setTrack', {
+    bookId,
+    trackId: previousTrackId,
+    autoplay: true
+  })
+}

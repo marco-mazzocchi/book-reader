@@ -21,12 +21,12 @@
             :src="book.cover"
             class="shadow-10 full-height"
           />
-          <q-spinner-audio
+          <!-- <q-spinner-audio
             v-show="isPlaying"
             color="white"
             size="100px"
             class="spinner-audio"
-          />
+          /> -->
         </div>
       </div>
 
@@ -36,8 +36,14 @@
       >
         <div class="boook-header">
           <div class="book-title">{{ book.title }}</div>
-          <div class="book-author">{{ book.author }}</div>
-          <div class="track-title">Traccia {{ trackId }}</div>
+          <div class="row">
+            <div class="col">
+              <div class="book-author">{{ book.author }}</div>
+            </div>
+            <div class="col">
+              <div class="track-title">Traccia {{ trackId }}</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -62,6 +68,30 @@
               {{durationInMinutes}}
             </div>
           </div>
+        </div>
+      </div>
+
+      <div
+        v-show="fullScreen"
+        class="col"
+      >
+        <div class="row justify-between">
+          <q-btn
+            size="xl"
+            flat
+            round
+            color="primary"
+            icon="replay_30"
+            @click="replay(30)"
+          />
+          <q-btn
+            size="xl"
+            flat
+            round
+            color="primary"
+            icon="forward_30"
+            @click="forward(30)"
+          />
         </div>
       </div>
 
@@ -90,23 +120,24 @@ const { mapGetters: mapBookGetters } = createNamespacedHelpers('books')
 export default {
   name: 'Player',
   components: { 'player-controls': PlayerControls },
-  data: function () {
-    return {
-      fullScreen: false
-    }
-  },
   methods: {
-    ...mapMutations(['setPlaying', 'setAudioIsReady']),
+    ...mapMutations(['setPlaying', 'setAudioIsReady', 'setFullScreen']),
     ...mapActions(['togglePlay', 'setCurrentTime']),
     handleTimeChange (value) {
       this.setCurrentTime(value)
     },
     toggleFullScreen () {
-      this.fullScreen = !this.fullScreen
+      this.setFullScreen(!this.fullScreen)
+    },
+    replay (seconds) {
+      this.setCurrentTime(this.currentTime - seconds)
+    },
+    forward (seconds) {
+      this.setCurrentTime(this.currentTime + seconds)
     }
   },
   computed: {
-    ...mapState(['isPlaying', 'audioIsReady', 'activeAudio', 'currentTime', 'bookId', 'trackId']),
+    ...mapState(['fullScreen', 'isPlaying', 'audioIsReady', 'activeAudio', 'currentTime', 'bookId', 'trackId']),
     ...mapBookGetters(['getBook']),
     duration () {
       return this.activeAudio.duration
@@ -138,7 +169,7 @@ export default {
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 3001;
+  z-index: 2000;
   transition: all 0.2s ease-in-out;
   &.full-screen {
     height: calc(100% - 50px);
@@ -165,9 +196,11 @@ export default {
   .book-author {
     color: $grey-6;
     font-weight: 500;
+    text-align: left;
   }
   .track-title {
-    margin-top: 0.3rem;
+    color: $grey-6;
+    text-align: right;
   }
 }
 </style>

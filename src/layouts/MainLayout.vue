@@ -3,6 +3,7 @@
     <q-header>
       <q-toolbar class="text-grey-6 bg-white">
         <q-btn
+          size="lg"
           @click="goBack"
           flat
           round
@@ -13,7 +14,14 @@
         <q-toolbar-title class="text-center text-uppercase">
           Book Reader
         </q-toolbar-title>
-        <!-- <q-btn flat round dense icon="more_vert" v-ripple /> -->
+        <q-btn
+          size="lg"
+          flat
+          round
+          dense
+          icon="more_vert"
+          v-ripple
+        />
       </q-toolbar>
     </q-header>
 
@@ -80,6 +88,9 @@
 
 <script>
 import player from '../components/player'
+import { createNamespacedHelpers } from 'vuex'
+
+const { mapState: mapPlayerState, mapMutations: mapPlayerMutations } = createNamespacedHelpers('player')
 
 export default {
   name: 'MainLayout',
@@ -87,6 +98,7 @@ export default {
     player
   },
   computed: {
+    ...mapPlayerState(['fullScreen']),
     drawerIsOpen: {
       get () {
         return this.$store.state.app.drawerIsOpen
@@ -97,8 +109,11 @@ export default {
     }
   },
   methods: {
+    ...mapPlayerMutations(['setFullScreen']),
     goBack () {
-      this.$router.back()
+      if (this.fullScreen) {
+        this.setFullScreen(false)
+      } else { this.$router.back() }
     }
   }
 }

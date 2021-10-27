@@ -25,3 +25,7 @@ export function setBookId (state, value) {
 export function setTrackId (state, value) {
   state.trackId = value
 }
+
+export function setFullScreen (state, value) {
+  state.fullScreen = value
+}
