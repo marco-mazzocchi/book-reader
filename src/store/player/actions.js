@@ -27,6 +27,7 @@ export function setTrack (context, payload) {
     function handleAudioEnded () {
       context.commit('setPlaying', false)
       context.commit('setCurrentTime', 0)
+      context.dispatch('playNextTrack')
     }
 
     const throttleTimeUpdate = throttle(() => {
@@ -126,20 +127,26 @@ export function restoreLastSession (context) {
 
 export function playPreviousTrack (context) {
   const { bookId, trackId } = context.state
-  const previousTrackId = parseInt(trackId) - 1 + ''
-  context.dispatch('setTrack', {
-    bookId,
-    trackId: previousTrackId,
-    autoplay: true
-  })
+  const previousTrackId = parseInt(trackId) - 1
+  if (previousTrackId > 0) {
+    context.dispatch('setTrack', {
+      bookId,
+      trackId: previousTrackId + '',
+      autoplay: true
+    })
+  }
 }
 
 export function playNextTrack (context) {
   const { bookId, trackId } = context.state
-  const previousTrackId = parseInt(trackId) + 1 + ''
-  context.dispatch('setTrack', {
-    bookId,
-    trackId: previousTrackId,
-    autoplay: true
-  })
+  const book = context.rootGetters['books/getBook'](bookId)
+  const trackTotal = Object.keys(book.tracks).length
+  const nextTrackId = parseInt(trackId) + 1
+  if (nextTrackId <= trackTotal) {
+    context.dispatch('setTrack', {
+      bookId,
+      trackId: nextTrackId + '',
+      autoplay: true
+    })
+  }
 }
